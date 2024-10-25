@@ -56,3 +56,19 @@ export const getMazos = async () => {
     return [];
   }
 };
+
+export const getMazosWithLimit = async (limit = 10) => {
+  try {
+    const allRows = await db.getAllAsync("SELECT * FROM mazos LIMIT ?", [
+      limit,
+    ]);
+
+    const mazosArray = allRows.map((row) => {
+      return { id: row.id, nombre: row.nombre };
+    });
+    return mazosArray;
+  } catch (error) {
+    console.error("Error al leer los mazos:", error);
+    return [];
+  }
+};
