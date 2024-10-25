@@ -24,8 +24,6 @@ export const Home = ({ navigation }) => {
     });
   }, []);
 
-  console.log(mazosPendientes);
-
   return (
     <View
       className="flex-1 justify-center items-center bg-white"
@@ -47,6 +45,7 @@ export const Home = ({ navigation }) => {
                 id={mazo.id}
                 nombre={mazo.nombre}
                 descripcion={mazo.descripcion}
+                funcion={() => navigation.navigate("Mazo Home", { mazo })}
               />
             ))}
           </View>

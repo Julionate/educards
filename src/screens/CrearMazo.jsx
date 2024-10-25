@@ -1,7 +1,6 @@
 import { View, Text, TextInput, Pressable } from "react-native";
-import { createMazo, deleteMazosTable } from "../database/db";
+import { createMazo } from "../database/db";
 import { useState } from "react";
-import { err } from "react-native-svg";
 
 export const CrearMazo = () => {
   const [nombre, setNombre] = useState(null);

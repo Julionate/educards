@@ -9,6 +9,7 @@ import "./global.css";
 import { LoadingScreen } from "./src/screens/LoadingScreen";
 import { Mazos } from "./src/screens/Mazos";
 import { CrearMazo } from "./src/screens/CrearMazo";
+import { MazoHome } from "./src/screens/MazoHome";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Mazos" component={Mazos} />
+        <Stack.Screen name="Mazo Home" component={MazoHome} />
         <Stack.Screen name="Crear Mazo" component={CrearMazo} />
       </Stack.Navigator>
     </NavigationContainer>

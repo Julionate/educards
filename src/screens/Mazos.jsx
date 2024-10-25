@@ -6,19 +6,26 @@ import { Deck } from "../components/deck";
 export const Mazos = ({ navigation }) => {
   const [mazos, setMazos] = useState([]);
 
+  const fetchMazos = async () => {
+    const mazos = await getMazos();
+    setMazos(mazos);
+  };
+
   useEffect(() => {
     const initializeDatabase = async () => {
-      const mazos = await getMazos();
-
-      setMazos(mazos);
+      await fetchMazos();
     };
 
     initializeDatabase().catch((error) => {
       console.error("Error en la inicialización de la base de datos:", error);
     });
-  }, []);
 
-  console.log(mazos);
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchMazos();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View className="flex-1 bg-white">
@@ -30,6 +37,7 @@ export const Mazos = ({ navigation }) => {
               id={mazo.id}
               nombre={mazo.nombre}
               descripcion={mazo.descripcion}
+              funcion={() => navigation.navigate("Mazo Home", { mazo })}
             />
           ))}
           <Deck

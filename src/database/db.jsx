@@ -42,7 +42,6 @@ export const createMazo = async (nombre, descripcion) => {
       "INSERT INTO mazos (nombre, descripcion) VALUES (?, ?)",
       [nombre, descripcion]
     );
-    console.log("Mazo creado con ID:", result.lastInsertRowId);
   } catch (error) {
     console.error("Error al crear el mazo:", error);
   }
