@@ -1,34 +1,11 @@
 import { View, Text, ScrollView } from "react-native";
-import { useState, useEffect } from "react";
-import { Card } from "../components/card";
-import { createTarjeta, getTarjetasByMazo } from "../database/db";
+import { useState } from "react";
+import { Card } from "../../components/card";
 
 export const MazoHome = ({ route, navigation }) => {
   const { mazo } = route.params;
   const { id, nombre, descripcion } = mazo;
-
   const [tarjetas, setTarjetas] = useState([]);
-
-  const fetchTarjetas = async () => {
-    const tarjetas = await getTarjetasByMazo(id);
-    setTarjetas(tarjetas);
-  };
-
-  useEffect(() => {
-    const initializeDatabase = async () => {
-      await fetchTarjetas();
-    };
-
-    initializeDatabase().catch((error) => {
-      console.error("Error en la inicialización de la base de datos:", error);
-    });
-
-    const unsubscribe = navigation.addListener("focus", () => {
-      fetchTarjetas();
-    });
-
-    return unsubscribe;
-  }, [navigation]);
 
   return (
     <ScrollView
