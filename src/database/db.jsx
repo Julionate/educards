@@ -86,3 +86,37 @@ export const getMazosWithLimit = async (limit = 10) => {
     return [];
   }
 };
+
+export const createTarjeta = async (mazo_id, front, back) => {
+  try {
+    const result = await db.runAsync(
+      "INSERT INTO tarjetas (mazo_id, front, back) VALUES (?, ?, ?)",
+      [mazo_id, front, back]
+    );
+    console.log("Tarjeta creada con ID:", result.lastInsertRowId);
+  } catch (error) {
+    console.error("Error al crear la tarjeta:", error);
+  }
+};
+
+export const getTarjetasByMazo = async (mazo_id) => {
+  try {
+    const allRows = await db.getAllAsync(
+      "SELECT * FROM tarjetas WHERE mazo_id = ?",
+      [mazo_id]
+    );
+
+    const tarjetasArray = allRows.map((row) => {
+      return {
+        id: row.id,
+        mazo_id: row.mazo_id,
+        front: row.front,
+        back: row.back,
+      };
+    });
+    return tarjetasArray;
+  } catch (error) {
+    console.error("Error al leer las tarjetas:", error);
+    return [];
+  }
+};
