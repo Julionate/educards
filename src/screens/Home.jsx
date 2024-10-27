@@ -48,7 +48,9 @@ export const Home = ({ navigation }) => {
                     id={mazo.id}
                     nombre={mazo.nombre}
                     descripcion={mazo.descripcion}
-                    funcion={() => navigation.navigate("Mazo Home", { mazo })}
+                    funcion={() =>
+                      navigation.navigate("Información Mazo", { mazo })
+                    }
                   />
                 ))}
               </View>

@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Pressable } from "react-native";
 import { useState } from "react";
-import { createTarjeta } from "../database/db";
+import { createTarjeta } from "../../database/db";
 
 export const CrearTarjeta = ({ route }) => {
   const { id } = route.params;

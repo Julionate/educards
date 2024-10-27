@@ -9,8 +9,8 @@ import "./global.css";
 import { LoadingScreen } from "./src/screens/LoadingScreen";
 import { Mazos } from "./src/screens/mazos/Mazos";
 import { CrearMazo } from "./src/screens/mazos/CrearMazo";
-import { MazoHome } from "./src/screens/mazos/MazoHome";
-import { CrearTarjeta } from "./src/screens/CrearTarjeta";
+import { MazoHome } from "./src/screens/mazos/InformacionMazo";
+import { CrearTarjeta } from "./src/screens/tarjetas/CrearTarjeta";
 import { MazoProvider } from "./src/context/MazosContext";
 import { EditarMazo } from "./src/screens/mazos/EditarMazo";
 
@@ -42,7 +42,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="Mazos" component={Mazos} />
-          <Stack.Screen name="Mazo Home" component={MazoHome} />
+          <Stack.Screen name="Información Mazo" component={MazoHome} />
           <Stack.Screen name="Crear Mazo" component={CrearMazo} />
           <Stack.Screen name="Editar Mazo" component={EditarMazo} />
           <Stack.Screen name="Crear Tarjeta" component={CrearTarjeta} />

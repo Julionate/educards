@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useContext } from "react";
 import { View, ScrollView } from "react-native";
 import { MazoContext } from "../../context/MazosContext"; // Importar el contexto
 import { Deck } from "../../components/deck";
@@ -16,7 +16,7 @@ export const Mazos = ({ navigation }) => {
               id={mazo.id}
               nombre={mazo.nombre}
               descripcion={mazo.descripcion}
-              funcion={() => navigation.navigate("Mazo Home", { mazo })}
+              funcion={() => navigation.navigate("Información Mazo", { mazo })}
             />
           ))}
           <Deck
