@@ -1,11 +1,18 @@
 import { View, Text, ScrollView } from "react-native";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Card } from "../../components/card";
+import { MazoContext } from "../../context/MazosContext";
 
 export const MazoHome = ({ route, navigation }) => {
+  const { tarjetas, fetchTarjetas } = useContext(MazoContext);
   const { mazo } = route.params;
   const { id, nombre, descripcion } = mazo;
-  const [tarjetas, setTarjetas] = useState([]);
+
+  useEffect(() => {
+    fetchTarjetas(id);
+  }, []);
+
+  console.log(tarjetas);
 
   return (
     <ScrollView

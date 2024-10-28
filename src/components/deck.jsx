@@ -24,7 +24,7 @@ export const Deck = ({
       onPress: () =>
         navigation.navigate("Editar Mazo", { id, nombre, descripcion }),
     },
-    { label: "Eliminar", onPress: () => handleDeleteMazo(id) }, // Usa la función de eliminar del contexto
+    { label: "Eliminar", onPress: () => handleDeleteMazo(id) },
   ];
 
   const handleLongPress = (event) => {

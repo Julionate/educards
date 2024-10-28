@@ -5,12 +5,15 @@ import {
   createMazo,
   deleteMazo,
   updateMazo,
-} from "../database/dbMethods";
+  getTarjetasByMazo,
+  createTarjeta,
+} from "../database/db";
 
 export const MazoContext = createContext();
 
 export const MazoProvider = ({ children }) => {
   const [mazos, setMazos] = useState([]);
+  const [tarjetas, setTarjetas] = useState([]);
 
   useEffect(() => {
     const initializeDB = async () => {
@@ -23,6 +26,11 @@ export const MazoProvider = ({ children }) => {
   const fetchMazos = async () => {
     const mazosArray = await getMazos();
     setMazos(mazosArray);
+  };
+
+  const fetchTarjetas = async (id) => {
+    const tarjetasArray = await getTarjetasByMazo(id);
+    setTarjetas(tarjetasArray);
   };
 
   const handleCreateMazo = async (nombre, descripcion) => {
@@ -40,9 +48,38 @@ export const MazoProvider = ({ children }) => {
     await fetchMazos();
   };
 
+  const handleCreateTarjeta = async (
+    idMazo,
+    front,
+    back,
+    fechaCreacion,
+    sigRevision,
+    intervalo,
+    factorFacilidad
+  ) => {
+    await createTarjeta(
+      idMazo,
+      front,
+      back,
+      fechaCreacion,
+      sigRevision,
+      intervalo,
+      factorFacilidad
+    );
+    await fetchTarjetas(idMazo);
+  };
+
   return (
     <MazoContext.Provider
-      value={{ mazos, handleCreateMazo, handleDeleteMazo, handleUpdateMazo }}
+      value={{
+        mazos,
+        tarjetas,
+        fetchTarjetas,
+        handleCreateTarjeta,
+        handleCreateMazo,
+        handleDeleteMazo,
+        handleUpdateMazo,
+      }}
     >
       {children}
     </MazoContext.Provider>
