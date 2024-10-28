@@ -2,19 +2,24 @@ import { useCallback } from "react";
 import { useMazos } from "../../context/MazosContext";
 import { View, ScrollView } from "react-native";
 import { Deck } from "../../components/deck";
-import { getMazos } from "../../database/db";
+import { deleteMazo, getMazos } from "../../database/db";
 import { useFocusEffect } from "@react-navigation/native";
 
 export const Mazos = ({ navigation }) => {
   const { mazos, setMazos } = useMazos();
 
+  const handleDeleteMazo = (id) => {
+    deleteMazo(id);
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    const mazosArray = await getMazos();
+    setMazos(mazosArray);
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const fetchData = async () => {
-        const mazosArray = await getMazos();
-        setMazos(mazosArray);
-      };
-
       fetchData();
 
       return () => {
@@ -34,6 +39,7 @@ export const Mazos = ({ navigation }) => {
               nombre={mazo.nombre}
               descripcion={mazo.descripcion}
               pendientes={mazo.pendientes}
+              handleDeleteMazo={handleDeleteMazo}
               funcion={() => navigation.navigate("Información Mazo", { mazo })}
             />
           ))}

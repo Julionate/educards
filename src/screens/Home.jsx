@@ -14,17 +14,18 @@ export const Home = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const frase = useFrase();
   const goToMazos = () => navigation.navigate("Mazos");
-  const handleDelete = (id) => {
+  const handleDeleteMazo = (id) => {
     deleteMazo(id);
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    const mazosArray = await getPendingMazos();
+    setMazos(mazosArray);
   };
 
   useFocusEffect(
     useCallback(() => {
-      const fetchData = async () => {
-        const mazosArray = await getPendingMazos();
-        setMazos(mazosArray);
-      };
-
       fetchData();
 
       return () => {
@@ -59,7 +60,7 @@ export const Home = ({ navigation }) => {
                     nombre={mazo.nombre}
                     descripcion={mazo.descripcion}
                     pendientes={mazo.pendientes}
-                    handleDelete={handleDelete()}
+                    handleDeleteMazo={handleDeleteMazo}
                     funcion={() => navigation.navigate("Revision", { mazo })}
                   />
                 ))}

@@ -12,7 +12,7 @@ export const Deck = ({
   descripcion = "Sin descripción",
   pendientes = 0,
   funcion,
-  handleDelete,
+  handleDeleteMazo,
   type = "default",
 }) => {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -25,7 +25,7 @@ export const Deck = ({
       onPress: () =>
         navigation.navigate("Editar Mazo", { id, nombre, descripcion }),
     },
-    { label: "Eliminar", onPress: () => handleDelete(id) },
+    { label: "Eliminar", onPress: () => handleDeleteMazo(id) },
   ];
 
   const handleLongPress = (event) => {
