@@ -1,29 +1,39 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { MazoContext } from "../context/MazosContext";
+import { useMazos } from "../context/MazosContext";
+import { deleteMazo } from "../database/db";
 
 import useFrase from "../database/Frases";
 import { Deck } from "../components/deck";
+import { useFocusEffect } from "@react-navigation/native";
+import { getPendingMazos } from "../database/db";
 
 export const Home = ({ navigation }) => {
-  const { mazos } = useContext(MazoContext);
+  const { mazos, setMazos } = useMazos();
   const insets = useSafeAreaInsets();
   const frase = useFrase();
   const goToMazos = () => navigation.navigate("Mazos");
-  const [mazosPendientes, setMazosPendientes] = useState([]);
-  const [otrosPendientes, setOtrosPendientes] = useState([]);
-
-  useEffect(() => {
-    getPending();
-  }, [mazos]);
-
-  const getPending = () => {
-    const pendientes = mazos.slice(0, 6);
-    const otrosPendientes = mazos.slice(6).length;
-    setMazosPendientes(pendientes);
-    setOtrosPendientes(otrosPendientes);
+  const handleDelete = (id) => {
+    deleteMazo(id);
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        const mazosArray = await getPendingMazos();
+        setMazos(mazosArray);
+      };
+
+      fetchData();
+
+      return () => {
+        setMazos([]);
+      };
+    }, [])
+  );
+
+  console.log(mazos);
 
   return (
     <View
@@ -35,28 +45,25 @@ export const Home = ({ navigation }) => {
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View className="flex-1 justify-center items-center">
-          {mazosPendientes.length > 0 ? (
+          {mazos.length > 0 ? (
             <>
               <Text className="text-2xl font-medium text-center">
                 Mazos pendientes
               </Text>
               <Text className="text-xl text-center">{frase}</Text>
               <View className="py-6 flex flex-row flex-wrap justify-center items-center gap-x-12 gap-y-6 z-10">
-                {mazosPendientes.map((mazo) => (
+                {mazos.map((mazo) => (
                   <Deck
                     key={mazo.id}
                     id={mazo.id}
                     nombre={mazo.nombre}
                     descripcion={mazo.descripcion}
-                    funcion={() =>
-                      navigation.navigate("Información Mazo", { mazo })
-                    }
+                    pendientes={mazo.pendientes}
+                    handleDelete={handleDelete()}
+                    funcion={() => navigation.navigate("Revision", { mazo })}
                   />
                 ))}
               </View>
-              {otrosPendientes > 0 ? (
-                <Text>+{otrosPendientes} pendientes</Text>
-              ) : null}
             </>
           ) : (
             <>

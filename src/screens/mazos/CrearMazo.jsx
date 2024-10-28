@@ -1,9 +1,8 @@
 import { View, Text, TextInput, Pressable } from "react-native";
 import { useState, useContext } from "react";
-import { MazoContext } from "../../context/MazosContext";
+import { createMazo } from "../../database/db";
 
 export const CrearMazo = () => {
-  const { handleCreateMazo } = useContext(MazoContext);
   const [nombre, setNombre] = useState(null);
   const [descripcion, setDescripcion] = useState(null);
   const [message, setMessage] = useState(null);
@@ -20,7 +19,7 @@ export const CrearMazo = () => {
     }
 
     setMessage(`Mazo: ${nombre}, fue creado con éxito`);
-    handleCreateMazo(nombre, descripcion);
+    createMazo(nombre, descripcion);
   };
 
   return (

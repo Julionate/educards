@@ -13,6 +13,7 @@ import { MazoHome } from "./src/screens/mazos/InformacionMazo";
 import { CrearTarjeta } from "./src/screens/tarjetas/CrearTarjeta";
 import { MazoProvider } from "./src/context/MazosContext";
 import { EditarMazo } from "./src/screens/mazos/EditarMazo";
+import { Revision } from "./src/screens/Revision";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +43,7 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen name="Mazos" component={Mazos} />
+          <Stack.Screen name="Revision" component={Revision} />
           <Stack.Screen name="Información Mazo" component={MazoHome} />
           <Stack.Screen name="Crear Mazo" component={CrearMazo} />
           <Stack.Screen name="Editar Mazo" component={EditarMazo} />

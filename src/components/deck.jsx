@@ -1,19 +1,20 @@
 // components/deck.js
-import React, { useState, useContext } from "react";
-import { MazoContext } from "../context/MazosContext";
+import React, { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import IconPlusCircle from "../../assets/icons/PlusCircle";
 import ModalMenu from "./menu";
 import { useNavigation } from "@react-navigation/native";
+import { deleteMazo } from "../database/db";
 
 export const Deck = ({
   id,
   nombre = "Sin nombre",
   descripcion = "Sin descripción",
+  pendientes = 0,
   funcion,
+  handleDelete,
   type = "default",
 }) => {
-  const { handleDeleteMazo } = useContext(MazoContext);
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const navigation = useNavigation();
@@ -24,7 +25,7 @@ export const Deck = ({
       onPress: () =>
         navigation.navigate("Editar Mazo", { id, nombre, descripcion }),
     },
-    { label: "Eliminar", onPress: () => handleDeleteMazo(id) },
+    { label: "Eliminar", onPress: () => handleDelete(id) },
   ];
 
   const handleLongPress = (event) => {
@@ -53,6 +54,11 @@ export const Deck = ({
   return (
     <View className="w-max h-max relative">
       <Pressable onPress={funcion} onLongPress={handleLongPress}>
+        {pendientes > 0 ? (
+          <View className="absolute z-10 -left-3 -top-3 bg-red-500 w-6 h-6 rounded-full flex justify-center items-center">
+            <Text className="text-white font-bold">{pendientes}</Text>
+          </View>
+        ) : null}
         <View className="w-36 h-48 bg-white shadow-black shadow-lg flex justify-start p-2 rounded-lg">
           <Text className="font-bold text-xl text-center">{nombre}</Text>
           <Text numberOfLines={6} ellipsizeMode="tail" className="text-xl">

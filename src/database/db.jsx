@@ -28,6 +28,7 @@ export const init = async () => {
         sigRevision DATETIME,
         intervalo FLOAT,
         factorFacilidad FLOAT,
+        factorDificultad FLOAT,
         FOREIGN KEY (mazo_id) REFERENCES mazos (id) ON DELETE CASCADE
       );
       CREATE TABLE IF NOT EXISTS revisiones (
@@ -82,12 +83,42 @@ export const updateMazo = async (nombre, descripcion, id) => {
 
 export const getMazos = async () => {
   try {
-    const allRows = await db.getAllAsync("SELECT * FROM mazos");
+    const allRows = await db.getAllAsync(
+      `SELECT m.id as m_id, m.nombre as m_nombre, m.descripcion as m_descripcion, count(t.id) as t_pendientes, min(t.sigRevision) as proxima_revision FROM mazos as m
+      LEFT JOIN tarjetas as t on m.id = t.mazo_id
+      GROUP BY m.id
+      ORDER BY t_pendientes DESC`
+    );
 
     return allRows.map((row) => ({
-      id: row.id,
-      nombre: row.nombre,
-      descripcion: row.descripcion,
+      id: row.m_id,
+      nombre: row.m_nombre,
+      descripcion: row.m_descripcion,
+      pendientes: row.t_pendientes,
+      proxima_revision: row.proxima_revision,
+    }));
+  } catch (error) {
+    console.error("Error al leer los mazos:", error);
+    return [];
+  }
+};
+
+export const getPendingMazos = async () => {
+  try {
+    const allRows = await db.getAllAsync(
+      `SELECT m.id as m_id, m.nombre as m_nombre, m.descripcion as m_descripcion, count(t.id) as t_pendientes, min(t.sigRevision) as proxima_revision FROM mazos as m
+      JOIN tarjetas as t on m.id = t.mazo_id
+      GROUP BY m.id
+      HAVING COUNT(t.id) > 0
+      ORDER BY t_pendientes DESC`
+    );
+
+    return allRows.map((row) => ({
+      id: row.m_id,
+      nombre: row.m_nombre,
+      descripcion: row.m_descripcion,
+      pendientes: row.t_pendientes,
+      proxima_revision: row.proxima_revision,
     }));
   } catch (error) {
     console.error("Error al leer los mazos:", error);
@@ -102,11 +133,12 @@ export const createTarjeta = async (
   fechaCreacion,
   sigRevision,
   intervalo,
-  factorFacilidad
+  factorFacilidad,
+  factorDificultad
 ) => {
   try {
     const result = await db.runAsync(
-      "INSERT INTO tarjetas (mazo_id, front, back, fechaCreacion, sigRevision, intervalo, factorFacilidad) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO tarjetas (mazo_id, front, back, fechaCreacion, sigRevision, intervalo, factorFacilidad, factorDificultad) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       [
         mazo_id,
         front,
@@ -115,6 +147,7 @@ export const createTarjeta = async (
         sigRevision,
         intervalo,
         factorFacilidad,
+        factorDificultad,
       ]
     );
     console.log("Tarjeta creada con ID:", result.lastInsertRowId);
@@ -139,6 +172,7 @@ export const getTarjetasByMazo = async (mazo_id) => {
       sigRevision: row.sigRevision,
       intervalo: row.intervalo,
       factorFacilidad: row.factorFacilidad,
+      factorDificultad: row.factorDificultad,
     }));
   } catch (error) {
     console.error("Error al leer las tarjetas:", error);

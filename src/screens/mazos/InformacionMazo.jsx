@@ -1,18 +1,29 @@
 import { View, Text, ScrollView } from "react-native";
-import { useState, useContext, useEffect } from "react";
+import { useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { Card } from "../../components/card";
-import { MazoContext } from "../../context/MazosContext";
+import { useMazos } from "../../context/MazosContext";
+import { getTarjetasByMazo } from "../../database/db";
 
 export const MazoHome = ({ route, navigation }) => {
-  const { tarjetas, fetchTarjetas } = useContext(MazoContext);
+  const { tarjetas, setTarjetas } = useMazos();
   const { mazo } = route.params;
   const { id, nombre, descripcion } = mazo;
 
-  useEffect(() => {
-    fetchTarjetas(id);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        const tarjetasArray = await getTarjetasByMazo(id);
+        setTarjetas(tarjetasArray);
+      };
 
-  console.log(tarjetas);
+      fetchData();
+
+      return () => {
+        setTarjetas([]);
+      };
+    }, [])
+  );
 
   return (
     <ScrollView

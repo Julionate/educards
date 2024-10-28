@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Pressable } from "react-native";
 import { useState, useContext } from "react";
-import { MazoContext } from "../../context/MazosContext";
+import { updateMazo } from "../../database/db";
 
 export const EditarMazo = ({ route }) => {
   const {
@@ -8,7 +8,6 @@ export const EditarMazo = ({ route }) => {
     nombre: nombreMazo,
     descripcion: descripcionMazo,
   } = route.params;
-  const { handleUpdateMazo } = useContext(MazoContext);
   const [nombre, setNombre] = useState(null);
   const [descripcion, setDescripcion] = useState(null);
   const [message, setMessage] = useState(null);
@@ -25,7 +24,7 @@ export const EditarMazo = ({ route }) => {
     }
 
     setMessage(`Mazo: ${nombre}, fue modificado con éxito`);
-    handleUpdateMazo(nombre, descripcion, id);
+    updateMazo(nombre, descripcion, id);
   };
 
   return (
@@ -34,13 +33,13 @@ export const EditarMazo = ({ route }) => {
       <TextInput
         className="h-20 bg-slate-50 rounded-lg w-full max-w-96 shadow-black shadow-sm text-xl p-4 border-b-1 border-black/5"
         onChangeText={(text) => setNombre(text)}
-        value={nombreMazo}
+        defaultValue={nombreMazo}
         placeholder="Ingrese un nombre"
       />
       <TextInput
         className="h-20 bg-slate-50 rounded-lg w-full max-w-96 shadow-black shadow-sm text-xl p-4 border-b-1 border-black/5"
         onChangeText={(text) => setDescripcion(text)}
-        value={descripcionMazo}
+        defaultValue={descripcionMazo}
         placeholder="Ingrese una descripción"
       />
       {message !== null || message !== "" ? <Text>{message}</Text> : null}

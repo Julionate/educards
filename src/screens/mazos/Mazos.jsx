@@ -1,10 +1,27 @@
-import { useContext } from "react";
+import { useCallback } from "react";
+import { useMazos } from "../../context/MazosContext";
 import { View, ScrollView } from "react-native";
-import { MazoContext } from "../../context/MazosContext"; // Importar el contexto
 import { Deck } from "../../components/deck";
+import { getMazos } from "../../database/db";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const Mazos = ({ navigation }) => {
-  const { mazos } = useContext(MazoContext); // Obtener mazos y la función para eliminar
+  const { mazos, setMazos } = useMazos();
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchData = async () => {
+        const mazosArray = await getMazos();
+        setMazos(mazosArray);
+      };
+
+      fetchData();
+
+      return () => {
+        setMazos([]);
+      };
+    }, [])
+  );
 
   return (
     <View className="flex-1 bg-white">
@@ -16,6 +33,7 @@ export const Mazos = ({ navigation }) => {
               id={mazo.id}
               nombre={mazo.nombre}
               descripcion={mazo.descripcion}
+              pendientes={mazo.pendientes}
               funcion={() => navigation.navigate("Información Mazo", { mazo })}
             />
           ))}

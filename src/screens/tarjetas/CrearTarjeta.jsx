@@ -1,10 +1,9 @@
 import { View, Text, TextInput, Pressable } from "react-native";
-import { useState, useContext } from "react";
-import { MazoContext } from "../../context/MazosContext";
+import { useState } from "react";
+import { createTarjeta } from "../../database/db";
 
 export const CrearTarjeta = ({ route }) => {
   const { id } = route.params;
-  const { handleCreateTarjeta } = useContext(MazoContext);
   const [front, setfront] = useState(null);
   const [back, setBack] = useState(null);
   const [message, setMessage] = useState(null);
@@ -23,16 +22,18 @@ export const CrearTarjeta = ({ route }) => {
     const sigRevision = new Date().toISOString();
     const intervalo = 1;
     const factorFacilidad = 0.5;
+    const factorDificultad = 0.3;
 
     setMessage(`Tarjeta: ${front}, fue creado con éxito para el mazo ${id}`);
-    handleCreateTarjeta(
+    createTarjeta(
       id,
       front,
       back,
       fechaCreacion,
       sigRevision,
       intervalo,
-      factorFacilidad
+      factorFacilidad,
+      factorDificultad
     );
   };
 
