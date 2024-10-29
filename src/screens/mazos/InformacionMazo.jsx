@@ -3,20 +3,25 @@ import { useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Card } from "../../components/card";
 import { useMazos } from "../../context/MazosContext";
-import { getTarjetasByMazo } from "../../database/db";
+import { deleteTarjeta, getTarjetasByMazo } from "../../database/db";
 
 export const MazoHome = ({ route, navigation }) => {
   const { tarjetas, setTarjetas } = useMazos();
   const { mazo } = route.params;
   const { id, nombre, descripcion } = mazo;
 
+  const handleDeleteTarjeta = (id) => {
+    deleteTarjeta(id);
+    fetchData();
+  };
+
+  const fetchData = async () => {
+    const tarjetasArray = await getTarjetasByMazo(id);
+    setTarjetas(tarjetasArray);
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const fetchData = async () => {
-        const tarjetasArray = await getTarjetasByMazo(id);
-        setTarjetas(tarjetasArray);
-      };
-
       fetchData();
 
       return () => {
@@ -38,7 +43,12 @@ export const MazoHome = ({ route, navigation }) => {
         </View>
         <View className="flex-1 items-center justify-center flex-wrap flex-row gap-3">
           {tarjetas.map((tarjeta) => (
-            <Card key={tarjeta.id} front={tarjeta.front} back={tarjeta.back} />
+            <Card
+              id={tarjeta.id}
+              key={tarjeta.id}
+              front={tarjeta.front}
+              handleDeleteTarjeta={handleDeleteTarjeta}
+            />
           ))}
           <Card
             type="card-add"

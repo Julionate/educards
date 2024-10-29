@@ -156,6 +156,14 @@ export const createTarjeta = async (
   }
 };
 
+export const deleteTarjeta = async (id) => {
+  try {
+    await db.runAsync("DELETE FROM tarjetas WHERE id = ?", [id]);
+  } catch (error) {
+    console.error("Error al borrar la tarjeta", error);
+  }
+};
+
 export const getTarjetasByMazo = async (mazo_id) => {
   try {
     const allRows = await db.getAllAsync(

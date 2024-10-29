@@ -4,7 +4,6 @@ import { View, Text, Pressable } from "react-native";
 import IconPlusCircle from "../../assets/icons/PlusCircle";
 import ModalMenu from "./menu";
 import { useNavigation } from "@react-navigation/native";
-import { deleteMazo } from "../database/db";
 
 export const Deck = ({
   id,

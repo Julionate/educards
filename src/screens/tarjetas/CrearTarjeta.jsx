@@ -41,12 +41,14 @@ export const CrearTarjeta = ({ route }) => {
     <View className="flex-1 justify-center items-center bg-white gap-6">
       <Text className="text-2xl font-medium">Crear una nueva tarjeta</Text>
       <TextInput
+        multiline={true}
         className="h-20 bg-slate-50 rounded-lg w-full max-w-96 shadow-black shadow-sm text-xl p-4 border-b-1 border-black/5"
         onChangeText={(text) => setfront(text)}
         value={front}
         placeholder="Ingrese la pregunta"
       />
       <TextInput
+        multiline={true}
         className="h-20 bg-slate-50 rounded-lg w-full max-w-96 shadow-black shadow-sm text-xl p-4 border-b-1 border-black/5"
         onChangeText={(text) => setBack(text)}
         value={back}
