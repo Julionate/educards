@@ -105,12 +105,18 @@ export const getMazos = async () => {
 
 export const getPendingMazos = async () => {
   try {
+    const currentDateTime = new Date().toISOString();
     const allRows = await db.getAllAsync(
-      `SELECT m.id as m_id, m.nombre as m_nombre, m.descripcion as m_descripcion, count(t.id) as t_pendientes, min(t.sigRevision) as proxima_revision FROM mazos as m
-      JOIN tarjetas as t on m.id = t.mazo_id
-      GROUP BY m.id
-      HAVING COUNT(t.id) > 0
-      ORDER BY t_pendientes DESC`
+      `SELECT m.id as m_id, m.nombre as m_nombre, m.descripcion as m_descripcion, 
+              count(t.id) as t_pendientes, 
+              min(t.sigRevision) as proxima_revision 
+       FROM mazos as m
+       JOIN tarjetas as t on m.id = t.mazo_id
+       WHERE t.sigRevision <= ?
+       GROUP BY m.id
+       HAVING COUNT(t.id) > 0
+       ORDER BY t_pendientes DESC`,
+      [currentDateTime]
     );
 
     return allRows.map((row) => ({
@@ -185,5 +191,57 @@ export const getTarjetasByMazo = async (mazo_id) => {
   } catch (error) {
     console.error("Error al leer las tarjetas:", error);
     return [];
+  }
+};
+
+export const getTarjetaByMazo = async (mazo_id) => {
+  try {
+    const currentDateTime = new Date().toISOString();
+    const firstRow = await db.getFirstAsync(
+      `SELECT * FROM tarjetas WHERE mazo_id = ? AND sigRevision <= ?`,
+      [mazo_id, currentDateTime]
+    );
+
+    return firstRow;
+  } catch (error) {
+    console.error("Error al leer las tarjetas:", error);
+    return [];
+  }
+};
+
+export const revisionTarjeta = async (intervalo, idTarjeta, dificultad) => {
+  try {
+    const fechaActual = new Date();
+    const sigRevision = new Date(
+      fechaActual.setDate(fechaActual.getDate() + intervalo)
+    ).toISOString();
+
+    await db.runAsync(
+      "UPDATE tarjetas SET sigRevision = ?, intervalo = ? WHERE id = ?",
+      [sigRevision, intervalo, idTarjeta]
+    );
+
+    await db.runAsync(
+      `INSERT into revisiones (idTarjeta, fechaRevision, dificultad)
+      VALUES(?, ?, ?)`,
+      [idTarjeta, fechaActual.toISOString(), dificultad]
+    );
+  } catch (error) {
+    console.error("Error al modificar la tarjeta", error);
+  }
+};
+
+export const getStats = async () => {
+  try {
+    const allRows = await db.getAllAsync("SELECT * FROM revisiones");
+
+    return allRows.map((row) => ({
+      id: row.id,
+      idTarjeta: row.idTarjeta,
+      fechaRevision: row.fechaRevision,
+      dificultad: row.dificultad,
+    }));
+  } catch {
+    console.error(error);
   }
 };

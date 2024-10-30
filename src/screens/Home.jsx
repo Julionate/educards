@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMazos } from "../context/MazosContext";
@@ -7,13 +7,15 @@ import { deleteMazo } from "../database/db";
 import useFrase from "../database/Frases";
 import { Deck } from "../components/deck";
 import { useFocusEffect } from "@react-navigation/native";
-import { getPendingMazos } from "../database/db";
+import { getPendingMazos, getStats } from "../database/db";
 
 export const Home = ({ navigation }) => {
   const { mazos, setMazos } = useMazos();
+  const [stats, setStats] = useState(null);
   const insets = useSafeAreaInsets();
   const frase = useFrase();
   const goToMazos = () => navigation.navigate("Mazos");
+
   const handleDeleteMazo = (id) => {
     deleteMazo(id);
     fetchData();
@@ -21,8 +23,12 @@ export const Home = ({ navigation }) => {
 
   const fetchData = async () => {
     const mazosArray = await getPendingMazos();
+    const statsArray = await getStats();
     setMazos(mazosArray);
+    setStats(statsArray);
   };
+
+  console.log(stats);
 
   useFocusEffect(
     useCallback(() => {
@@ -33,8 +39,6 @@ export const Home = ({ navigation }) => {
       };
     }, [])
   );
-
-  console.log(mazos);
 
   return (
     <View
@@ -83,7 +87,11 @@ export const Home = ({ navigation }) => {
 
         <View className="flex-1 justify-center items-center">
           <Text className="text-2xl font-medium">Tus estadísticas</Text>
-          <Text className="text-xl">Aquí iría algo sobre tus estadísticas</Text>
+          <View>
+            {stats.map((stat) => (
+              <Text>{stat.fechaRevision}</Text>
+            ))}
+          </View>
         </View>
 
         <View className="h-max w-screen px-16 py-6 bg-sky-400 flex items-center justify-center">
