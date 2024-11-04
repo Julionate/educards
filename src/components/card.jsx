@@ -2,6 +2,7 @@ import { View, Text, Pressable } from "react-native";
 import { useState } from "react";
 import IconPlusCircle from "../../assets/icons/PlusCircle";
 import ModalMenu from "./menu";
+import { useNavigation } from "@react-navigation/native";
 
 export const Card = ({
   id,
@@ -13,10 +14,11 @@ export const Card = ({
 }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const navigation = useNavigation();
   const actions = [
     {
       label: "Editar",
-      onPress: () => console.log("Se presionó editar Tarjeta"),
+      onPress: () => navigation.navigate("Editar Tarjeta", { id, front, back }),
     },
     {
       label: "Eliminar",

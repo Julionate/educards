@@ -14,6 +14,10 @@ import { CrearTarjeta } from "./src/screens/tarjetas/CrearTarjeta";
 import { MazoProvider } from "./src/context/MazosContext";
 import { EditarMazo } from "./src/screens/mazos/EditarMazo";
 import { Revision } from "./src/screens/Revision";
+import { Button } from "react-native";
+import { NavigationAddMazo } from "./src/components/NavigationAddMazo";
+import { NavigationAddTarjeta } from "./src/components/NavigationAddTarjeta";
+import { EditarTarjeta } from "./src/screens/tarjetas/EditarTarjeta";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,12 +46,25 @@ export default function App() {
             component={Home}
             options={{ headerShown: false }}
           />
-          <Stack.Screen name="Mazos" component={Mazos} />
+          <Stack.Screen
+            name="Mazos"
+            component={Mazos}
+            options={{
+              headerRight: () => <NavigationAddMazo />,
+            }}
+          />
           <Stack.Screen name="Revision" component={Revision} />
-          <Stack.Screen name="Información Mazo" component={MazoHome} />
+          <Stack.Screen
+            name="Información Mazo"
+            component={MazoHome}
+            options={{
+              headerRight: () => <NavigationAddTarjeta />,
+            }}
+          />
           <Stack.Screen name="Crear Mazo" component={CrearMazo} />
           <Stack.Screen name="Editar Mazo" component={EditarMazo} />
           <Stack.Screen name="Crear Tarjeta" component={CrearTarjeta} />
+          <Stack.Screen name="Editar Tarjeta" component={EditarTarjeta} />
         </Stack.Navigator>
       </NavigationContainer>
     </MazoProvider>

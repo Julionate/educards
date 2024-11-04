@@ -175,6 +175,18 @@ export const deleteTarjeta = async (id) => {
   }
 };
 
+export const updateTarjeta = async (front, back, id) => {
+  try {
+    await db.runAsync("UPDATE tarjetas SET front = ?, back = ? WHERE id = ?", [
+      front,
+      back,
+      id,
+    ]);
+  } catch (error) {
+    console.error("Error al actualizar la tarjeta: ", error);
+  }
+};
+
 export const getTarjetasByMazo = async (mazo_id) => {
   try {
     const allRows = await db.getAllAsync(

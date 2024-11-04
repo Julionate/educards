@@ -13,6 +13,10 @@ export const Mazos = ({ navigation }) => {
     fetchData();
   };
 
+  const handleAddMazo = () => {
+    navigation.navigate("Crear Mazo");
+  };
+
   const fetchData = async () => {
     const mazosArray = await getMazos();
     setMazos(mazosArray);
@@ -30,8 +34,14 @@ export const Mazos = ({ navigation }) => {
 
   return (
     <View className="flex-1 bg-white">
-      <ScrollView>
-        <View className="py-6 flex-1 flex-row flex-wrap justify-center items-center gap-x-12 gap-y-6">
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <View className="py-6 flex-row flex-wrap justify-center items-center gap-x-12 gap-y-6">
           {mazos.map((mazo) => (
             <Deck
               key={mazo.id}
@@ -43,10 +53,7 @@ export const Mazos = ({ navigation }) => {
               funcion={() => navigation.navigate("Información Mazo", { mazo })}
             />
           ))}
-          <Deck
-            type="add-deck"
-            funcion={() => navigation.navigate("Crear Mazo")}
-          />
+          <Deck type="add-deck" funcion={handleAddMazo} />
         </View>
       </ScrollView>
     </View>

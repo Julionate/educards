@@ -47,6 +47,7 @@ export const MazoHome = ({ route, navigation }) => {
               id={tarjeta.id}
               key={tarjeta.id}
               front={tarjeta.front}
+              back={tarjeta.back}
               handleDeleteTarjeta={handleDeleteTarjeta}
             />
           ))}

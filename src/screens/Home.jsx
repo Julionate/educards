@@ -72,7 +72,7 @@ export const Home = ({ navigation }) => {
               <Text className="text-2xl font-medium text-center">
                 🎊 ¡Felicidades! 🎊
               </Text>
-              <Text>No tienes mazos pendientes! </Text>
+              <Text>¡No tienes mazos pendientes! </Text>
             </>
           )}
           <Pressable onPress={goToMazos}>
