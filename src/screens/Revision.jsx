@@ -18,8 +18,6 @@ export const Revision = ({ route }) => {
   const { mazo } = route.params;
   const { id } = mazo;
 
-  console.log(tarjeta);
-
   const handleRevision = (seleccion) => {
     let factor;
     let newIntervalo;
@@ -76,7 +74,6 @@ export const Revision = ({ route }) => {
           style={{ flex: 1 }}
           onPress={() => {
             if (isScrolling === false) {
-              console.log("invirtiendo");
               setIsFlipped(!isFlipped);
             }
           }}

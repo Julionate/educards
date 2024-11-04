@@ -1,4 +1,9 @@
 import * as SQLite from "expo-sqlite";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 let db;
 
@@ -211,10 +216,13 @@ export const getTarjetaByMazo = async (mazo_id) => {
 
 export const revisionTarjeta = async (intervalo, idTarjeta, dificultad) => {
   try {
-    const fechaActual = new Date();
-    const sigRevision = new Date(
-      fechaActual.setDate(fechaActual.getDate() + intervalo)
-    ).toISOString();
+    const TIMEZONE = dayjs.tz.guess();
+    const fechaActual = dayjs().utc(true).tz(TIMEZONE).toISOString();
+    const sigRevision = dayjs()
+      .utc(true)
+      .tz(TIMEZONE)
+      .add(intervalo, "days")
+      .toISOString();
 
     await db.runAsync(
       "UPDATE tarjetas SET sigRevision = ?, intervalo = ? WHERE id = ?",
@@ -224,7 +232,7 @@ export const revisionTarjeta = async (intervalo, idTarjeta, dificultad) => {
     await db.runAsync(
       `INSERT into revisiones (idTarjeta, fechaRevision, dificultad)
       VALUES(?, ?, ?)`,
-      [idTarjeta, fechaActual.toISOString(), dificultad]
+      [idTarjeta, fechaActual, dificultad]
     );
   } catch (error) {
     console.error("Error al modificar la tarjeta", error);
@@ -233,13 +241,13 @@ export const revisionTarjeta = async (intervalo, idTarjeta, dificultad) => {
 
 export const getStats = async () => {
   try {
-    const allRows = await db.getAllAsync("SELECT * FROM revisiones");
+    const allRows = await db.getAllAsync(
+      `SELECT DATE(fechaRevision) as date, COUNT(id) as count FROM revisiones GROUP BY date`
+    );
 
     return allRows.map((row) => ({
-      id: row.id,
-      idTarjeta: row.idTarjeta,
-      fechaRevision: row.fechaRevision,
-      dificultad: row.dificultad,
+      date: row.date,
+      count: row.count,
     }));
   } catch {
     console.error(error);

@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { useCallback } from "react";
+import { View, Text, ScrollView, Pressable, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMazos } from "../context/MazosContext";
 import { deleteMazo } from "../database/db";
@@ -8,10 +8,10 @@ import useFrase from "../database/Frases";
 import { Deck } from "../components/deck";
 import { useFocusEffect } from "@react-navigation/native";
 import { getPendingMazos, getStats } from "../database/db";
+import { StatsView } from "../components/stats";
 
 export const Home = ({ navigation }) => {
   const { mazos, setMazos } = useMazos();
-  const [stats, setStats] = useState(null);
   const insets = useSafeAreaInsets();
   const frase = useFrase();
   const goToMazos = () => navigation.navigate("Mazos");
@@ -23,12 +23,8 @@ export const Home = ({ navigation }) => {
 
   const fetchData = async () => {
     const mazosArray = await getPendingMazos();
-    const statsArray = await getStats();
     setMazos(mazosArray);
-    setStats(statsArray);
   };
-
-  console.log(stats);
 
   useFocusEffect(
     useCallback(() => {
@@ -46,15 +42,16 @@ export const Home = ({ navigation }) => {
       style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
     >
       <View className="mb-6">
-        <Text className="text-3xl font-bold">EDUCARDS</Text>
+        <Image
+          source={require("../../assets/logos/educards_without_slogan.webp")}
+          className="w-40 h-12"
+        />
       </View>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="flex-1 justify-center items-center">
+        <View className="flex-1 justify-center items-center p-5">
           {mazos.length > 0 ? (
             <>
-              <Text className="text-2xl font-medium text-center">
-                Mazos pendientes
-              </Text>
+              <Text className="text-2xl font-medium">Mazos pendientes</Text>
               <Text className="text-xl text-center">{frase}</Text>
               <View className="py-6 flex flex-row flex-wrap justify-center items-center gap-x-12 gap-y-6 z-10">
                 {mazos.map((mazo) => (
@@ -86,12 +83,7 @@ export const Home = ({ navigation }) => {
         </View>
 
         <View className="flex-1 justify-center items-center">
-          <Text className="text-2xl font-medium">Tus estadísticas</Text>
-          <View>
-            {stats.map((stat) => (
-              <Text>{stat.fechaRevision}</Text>
-            ))}
-          </View>
+          <StatsView />
         </View>
 
         <View className="h-max w-screen px-16 py-6 bg-sky-400 flex items-center justify-center">

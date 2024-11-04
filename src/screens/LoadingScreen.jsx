@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Image } from "react-native";
 
 export const LoadingScreen = ({ navigation }) => {
   useEffect(() => {
@@ -12,7 +12,10 @@ export const LoadingScreen = ({ navigation }) => {
 
   return (
     <View className="flex-1 justify-center items-center bg-white">
-      <Text className="text-5xl font-semibold">EDUCARDS</Text>
+      <Image
+        className="w-64 h-20"
+        source={require("../../assets/logos/educards_full.webp")}
+      />
     </View>
   );
 };
